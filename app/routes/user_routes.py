@@ -1,12 +1,14 @@
 from flask import Blueprint, request
-from app.schemas.user_schema import UserSchema
-from app.services.user_service import register_user, login_user
 
-user_bp = Blueprint('user', __name__, url_prefix='/api/users')
+from app.schemas.user_schema import UserSchema
+from app.services.user_service import login_user, register_user
+
+user_bp = Blueprint("user", __name__, url_prefix="/api/users")
 
 user_schema = UserSchema()
 
-@user_bp.route('/register', methods=['POST'])
+
+@user_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
     errors = user_schema.validate(data)
@@ -14,7 +16,8 @@ def register():
         return {"errors": errors}, 400
     return register_user(data)
 
-@user_bp.route('/login', methods=['POST'])
+
+@user_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     if not data:

@@ -1,7 +1,9 @@
 from flask import Flask
-from .extensions import db, migrate, bcrypt, jwt
-from .config import Config
+
 from .blueprints import register_blueprints
+from .config import Config
+from .extensions import bcrypt, db, jwt, migrate
+
 
 def create_app():
     app = Flask(__name__)

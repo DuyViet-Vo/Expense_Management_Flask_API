@@ -1,11 +1,13 @@
-from app.models.user import User
-from app.extensions import db
 from flask_jwt_extended import create_access_token
 
+from app.extensions import db
+from app.models.user import User
+
+
 def register_user(data):
-    username = data['username']
-    email = data['email']
-    password = data['password']
+    username = data["username"]
+    email = data["email"]
+    password = data["password"]
 
     # Kiểm tra xem email hoặc username đã tồn tại chưa
     if User.query.filter((User.username == username) | (User.email == email)).first():
@@ -18,9 +20,10 @@ def register_user(data):
     db.session.commit()
     return {"message": "User registered successfully"}, 201
 
+
 def login_user(data):
-    email = data['email']
-    password = data['password']
+    email = data["email"]
+    password = data["password"]
 
     user = User.query.filter_by(email=email).first()
 
