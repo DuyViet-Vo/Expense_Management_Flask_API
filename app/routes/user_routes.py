@@ -1,25 +1,29 @@
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
-from app.schemas.user_schema import UserSchema
-from app.services.user_service import login_user, register_user
+from app.services.user_service import UserService
 
 user_bp = Blueprint("user", __name__, url_prefix="/api/users")
 
-user_schema = UserSchema()
 
-
-@user_bp.route("/register", methods=["POST"])
+@user_bp.route("/resgister", methods=["POST"])
 def register():
     data = request.get_json()
-    errors = user_schema.validate(data)
-    if errors:
-        return {"errors": errors}, 400
-    return register_user(data)
+    result = UserService.register(data)
+    return jsonify(result), result["status"]
 
 
 @user_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-    if not data:
-        return {"message": "Missing JSON body"}, 400
-    return login_user(data)
+    result = UserService.login(data)
+    return jsonify(result), result["status"]
+
+
+@user_bp.route("/change-password", methods=["PUT"])
+@jwt_required()
+def change_password():
+    data = request.get_json()
+    current_user = get_jwt_identity()
+    result = UserService.change_password(current_user, data)
+    return jsonify(result), result["status"]
