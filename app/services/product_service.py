@@ -1,5 +1,6 @@
 from app.extensions import db
 from app.models.product import Product
+from app.schemas.product_schema import products_schema
 
 
 class ProductService:
@@ -53,4 +54,4 @@ class ProductService:
     @staticmethod
     def get_all_products():
         products = Product.query.all()
-        return {"data": [product.to_dict() for product in products], "status": 200}
+        return {"data": products_schema.dump(products), "status": 200}
