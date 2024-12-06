@@ -18,7 +18,3 @@
    ```
    python run.py
    ```
-4. Swagger docs
-   ```
-   http://localhost:5000/api/docs/
-   ```
