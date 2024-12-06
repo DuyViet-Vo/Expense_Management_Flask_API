@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 
+from app.schemas.product_schema import product_schema
 from app.services.product_service import ProductService
 
 product_bp = Blueprint("product", __name__, url_prefix="/api/products")
@@ -24,6 +25,9 @@ def get_product(product_id):
 @jwt_required()
 def create_product():
     data = request.get_json()
+    errors = product_schema.validate(data)
+    if errors:
+        return jsonify({"error": errors}), 400
     result = ProductService.create_product(data)
     return jsonify(result), result["status"]
 
