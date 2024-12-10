@@ -1,3 +1,5 @@
+from flask import request
+
 from app.extensions import db
 from app.models.product import Product
 from app.schemas.product_schema import products_schema
@@ -53,5 +55,20 @@ class ProductService:
 
     @staticmethod
     def get_all_products():
-        products = Product.query.all()
-        return {"data": products_schema.dump(products), "status": 200}
+        page = request.args.get("page", default=1, type=int)
+        per_page = request.args.get("per_page", default=10, type=int)
+        pagination = Product.query.paginate(page=page, per_page=per_page, error_out=False)
+        products = pagination.items
+
+        return {
+            "data": products_schema.dump(products),
+            "status": 200,
+            "meta": {
+                "page": page,
+                "per_page": per_page,
+                "total": pagination.total,
+                "pages": pagination.pages,
+                "has_next": pagination.has_next,
+                "has_prev": pagination.has_prev,
+            },
+        }

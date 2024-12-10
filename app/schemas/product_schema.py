@@ -3,7 +3,7 @@ from marshmallow import Schema, fields
 
 class ProductSchema(Schema):
     id = fields.Int(dump_only=True)
-    group_name = fields.Str(required=True)
+    name = fields.Str(required=True)
     description = fields.Str()
     price = fields.Float(required=True)
     stock = fields.Int(required=True)
