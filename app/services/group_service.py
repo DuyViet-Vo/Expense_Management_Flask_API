@@ -1,3 +1,4 @@
+from flask import request
 from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import and_
 
@@ -11,7 +12,6 @@ class GroupService:
     @staticmethod
     def create_group(data, user_create):
         group_name = data.get("group_name")
-        print("+++++", user_create)
         # Use the column attribute from the User model
         user = User.query.filter(User.username == user_create).first()
         if not user:
@@ -68,5 +68,34 @@ class GroupService:
 
     @staticmethod
     def get_all_groups():
-        groups = Group.query.all()
-        return {"data": groups_schema.dump(groups), "status": 200}
+        page = request.args.get("page", default=1, type=int)
+        per_page = request.args.get("per_page", default=10, type=int)
+        pagination = Group.query.paginate(page=page, per_page=per_page, error_out=False)
+        products = pagination.items
+
+        return {
+            "data": groups_schema.dump(products),
+            "status": 200,
+            "meta": {
+                "page": page,
+                "per_page": per_page,
+                "total": pagination.total,
+                "pages": pagination.pages,
+                "has_next": pagination.has_next,
+                "has_prev": pagination.has_prev,
+            },
+        }
+
+    @staticmethod
+    def delete_many_group(data: dict):
+        try:
+            group_ids = data.get("group_ids", [])
+            print("++++", group_ids)
+            if not group_ids or not isinstance(group_ids, list):
+                return {"message": "List of invalid group ids!", "status": 400}
+            Group.query.filter(Group.id.in_(group_ids)).delete()
+            db.session.commit()
+            return {"message": f"Deleted successfully {group_ids} group", "status": 200}
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e), "status": 500}

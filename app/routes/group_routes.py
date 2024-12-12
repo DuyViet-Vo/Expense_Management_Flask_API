@@ -42,3 +42,11 @@ def get_group(group_id):
 def delete_group(group_id):
     result = GroupService.delete_group(group_id)
     return jsonify(result), result["status"]
+
+
+@group_bp.route("/delete-many", methods=["DELETE"])
+@jwt_required()
+def delete_many_group():
+    data = request.get_json()
+    result = GroupService.delete_many_group(data)
+    return jsonify(result), result["status"]
