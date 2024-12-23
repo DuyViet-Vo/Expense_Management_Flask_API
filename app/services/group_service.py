@@ -71,10 +71,25 @@ class GroupService:
         page = request.args.get("page", default=1, type=int)
         per_page = request.args.get("per_page", default=10, type=int)
         pagination = Group.query.paginate(page=page, per_page=per_page, error_out=False)
-        products = pagination.items
+        groups = pagination.items
 
+        groups_data = [
+        {
+            "id": group.id,
+            "group_name": group.group_name,
+            "user_create": group.user_create,
+            "create_at": group.create_at,
+            "updated_at": group.updated_at,
+            "user": {
+                "id": group.user.id,
+                "username": group.user.username,
+                "email": group.user.email,
+            } if group.user else None,
+        }
+        for group in groups
+    ]
         return {
-            "data": groups_schema.dump(products),
+            "data": groups_data,
             "status": 200,
             "meta": {
                 "page": page,

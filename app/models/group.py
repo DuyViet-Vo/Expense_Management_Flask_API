@@ -11,6 +11,9 @@ class Group(db.Model):
     user_create = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     create_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    
+    user = db.relationship("User", backref="groups")
+
 
     def to_dict(self):
         return {
@@ -19,4 +22,9 @@ class Group(db.Model):
             "user_create": self.user_create,
             "create_at": self.create_at,
             "updated_at": self.updated_at,
+            "user": {
+                "id": self.user.id,
+                "username": self.user.username,
+                "email": self.user.email,
+            } if self.user else None,
         }
