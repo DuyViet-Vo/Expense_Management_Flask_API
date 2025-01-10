@@ -9,3 +9,10 @@ class Config:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "voduyviet_flask_project")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
+    CORS_RESOURCES = {
+        r"/api/*": {
+            "origins": ["http://localhost:3000"],
+            "methods": ["GET", "POST"],
+            "allow_headers": ["Content-Type", "Authorization"],
+        }
+    }
