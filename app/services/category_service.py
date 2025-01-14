@@ -1,4 +1,5 @@
 from flask import request
+
 from app.extensions import db
 from app.models.category import Category
 
@@ -11,8 +12,10 @@ class CategoryService:
             return {"message": "Missing required fields", "status": 400}
 
         if Category.query.filter_by(name=name).first():
-            return {"message": "Category name already exists! Please choose another name.",
-                    "status": 409}  # 409 Conflict
+            return {
+                "message": "Category name already exists! Please choose another name.",
+                "status": 409,
+            }  # 409 Conflict
 
         category = Category(name=name)
         db.session.add(category)
@@ -44,6 +47,4 @@ class CategoryService:
             return {"message": "Category not found!", "status": 404}
         db.session.delete(category)
         db.session.commit()
-        return {
-            "message": "Category delete successfully", "status": 200
-        }
+        return {"message": "Category delete successfully", "status": 200}

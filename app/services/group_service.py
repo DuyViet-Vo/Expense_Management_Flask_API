@@ -74,20 +74,22 @@ class GroupService:
         groups = pagination.items
 
         groups_data = [
-        {
-            "id": group.id,
-            "group_name": group.group_name,
-            "user_create": group.user_create,
-            "create_at": group.create_at,
-            "updated_at": group.updated_at,
-            "user": {
-                "id": group.user.id,
-                "username": group.user.username,
-                "email": group.user.email,
-            } if group.user else None,
-        }
-        for group in groups
-    ]
+            {
+                "id": group.id,
+                "group_name": group.group_name,
+                "user_create": group.user_create,
+                "create_at": group.create_at,
+                "updated_at": group.updated_at,
+                "user": {
+                    "id": group.user.id,
+                    "username": group.user.username,
+                    "email": group.user.email,
+                }
+                if group.user
+                else None,
+            }
+            for group in groups
+        ]
         return {
             "data": groups_data,
             "status": 200,

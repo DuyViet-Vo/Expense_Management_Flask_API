@@ -1,9 +1,10 @@
-
 from flask import Flask
 from flask_cors import CORS
+
 from app.blueprints import register_blueprints
 from app.config import Config
 from app.extensions import bcrypt, db, jwt, migrate
+
 
 def create_app():
     app = Flask(__name__)
@@ -20,6 +21,7 @@ def create_app():
     register_blueprints(app)
 
     return app
+
 
 app = create_app()
 
