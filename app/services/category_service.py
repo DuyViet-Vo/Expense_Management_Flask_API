@@ -7,16 +7,16 @@ class CategoryService:
     @staticmethod
     def create_category(data):
         name = data.get("name")
-
         if not name:
             return {"message": "Missing required fields", "status": 400}
-        category_name = Category.query.filter(Category.name == name).first() 
-        if category_name is not None:
-            return {"message": "Category name already exists! Please choose another name.", "status": 404}
+
+        if Category.query.filter_by(name=name).first():
+            return {"message": "Category name already exists! Please choose another name.",
+                    "status": 409}  # 409 Conflict
+
         category = Category(name=name)
         db.session.add(category)
         db.session.commit()
-        return {"message": "Product created successfully", "data": category.to_dict(), "status": 201}
 
     @staticmethod
     def get_all_category():
@@ -45,6 +45,5 @@ class CategoryService:
         db.session.delete(category)
         db.session.commit()
         return {
-            "message": "Category delete successfully","status": 200
+            "message": "Category delete successfully", "status": 200
         }
-
