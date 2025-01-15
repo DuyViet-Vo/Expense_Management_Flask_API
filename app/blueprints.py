@@ -5,6 +5,7 @@ from app.routes.group_routes import group_bp
 from app.routes.product_routes import product_bp
 from app.routes.user_routes import user_bp
 from app.routes.category_group_routes import category_group_bp
+from app.routes.transaction_routes import transaction_bp
 
 
 def register_blueprints(app):
@@ -13,3 +14,4 @@ def register_blueprints(app):
     app.register_blueprint(group_bp)
     app.register_blueprint(category_bp)
     app.register_blueprint(category_group_bp)
+    app.register_blueprint(transaction_bp)
