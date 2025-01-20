@@ -68,9 +68,14 @@ class GroupService:
 
     @staticmethod
     def get_all_groups():
+        current_user_id = get_jwt_identity()  # Lấy thông tin user_id từ JWT
         page = request.args.get("page", default=1, type=int)
         per_page = request.args.get("per_page", default=10, type=int)
-        pagination = Group.query.paginate(page=page, per_page=per_page, error_out=False)
+
+        # Lọc các nhóm dựa trên user_id của người dùng hiện tại
+        pagination = Group.query.filter_by(user_create= User.query.filter(User.username == current_user_id).first().id).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
         groups = pagination.items
 
         groups_data = [
@@ -102,7 +107,6 @@ class GroupService:
                 "has_prev": pagination.has_prev,
             },
         }
-
     @staticmethod
     def delete_many_group(data: dict):
         try:
