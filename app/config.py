@@ -11,7 +11,7 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
     CORS_RESOURCES = {
         r"/api/*": {
-            "origins": ["http://localhost:3000"],
+            "origins": "*",
             "methods": ["GET", "POST"],
             "allow_headers": ["Content-Type", "Authorization"],
         }

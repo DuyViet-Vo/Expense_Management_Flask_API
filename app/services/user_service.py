@@ -41,7 +41,7 @@ class UserService:
 
         if user and user.check_password(password):
             token = create_access_token(identity=user.username)
-            return {"message": "Login successful", "token": token, "status": 200}
+            return {"message": "Login successful", "token": token, "status": 200, "id": user.id}
 
         return {"message": "Invalid credentials", "status": 401}
 
